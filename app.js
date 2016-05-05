@@ -18,6 +18,8 @@ var flash = require('connect-flash');
 
 //生成一个express实例app
 var app = express();
+var passport = require('passport'),
+    GithubStrategy = require('passport-github').Strategy;
 //创建输入输出流
 var fs = require('fs');
 var accessLog = fs.createWriteStream('access.log',{flags:'a'});
@@ -64,6 +66,8 @@ app.use(function (err,req,res,next) {
 //});
 //使用express-session和connect-mongo模块实现了将会话信息存储到MongoDB中。
 //secret用来防止篡改Cookie
+app.use(passport.initialize());//初始化Passport
+
 app.use(session({
     secret: settings.cookieSecret,
     key: settings.db,
@@ -108,6 +112,14 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
+
+passport.use(new GithubStrategy({
+  clientID:"3035f36ec15df46c6596",
+  clientSecret:"ea356ea0b38a2370ca1eedd7b1876d035bb8f658",
+  callbackURL:"http://localhost:3000/login/github/callback"
+},function(accessToken,refreshToken,profile,done){
+  done(null,profile);
+}));
 
 // error handlers
 
