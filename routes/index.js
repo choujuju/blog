@@ -75,7 +75,7 @@ module.exports = function(app) {
     session:false,
     failureRedirect:'/login',
     successFalsh:'登陆成功！'
-  })function(req,res){
+  }),function(req,res){
     req.session.user = {name: req.user.username, head: "https://gravatar.com/avatar/"+req.user._json.gravatar_id+"?s=48"};
     res.redirect('/');
   });
